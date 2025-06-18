@@ -22,6 +22,7 @@
 
 module top(
     input clk,
+	input rst,
     input CS_n,
     input SCLK,
     input MOSI,
@@ -30,6 +31,13 @@ module top(
     output dp,
     output [3:0] an
     );
+
+	logic rst_n;
+	safeReset synchReset (
+		.clk(clk),
+		.asyncR(rst),
+		.safeR(rst_n)
+	);
 
 	logic [7:0] num;
 	logic sCS_n, sSCLK, sMOSI;
@@ -52,14 +60,34 @@ module top(
 	);
 
 
+	logic fullHist; // For rising edge detection (new sample)
+	logic full, send;
+	logic [7:0] returnData;
 
-	SPItop spi (
+	assign returnData = num; // Echo the input
+
+	always @(posedge clk) begin
+
+		fullHist <= full;
+
+		if ({fullHist, full} == 2'b01) begin // Rising edge, pulse
+			send <= 1'b1;
+		end else begin
+			send <= 1'b0;
+		end
+	end
+
+	SPItop #(.WIDTH(8)) spi (
 		.clk(clk),
+		.rst_n(rst_n),
 		.CS_n(sCS_n),
 		.SCLK(sSCLK),
 		.MOSI(sMOSI),
 		.MISO(MISO),
-		.num(num)
+		.data(num),
+		.full(full),
+		.send(send),
+		.dataIn(returnData)
 	);
 
 	// 7-segment display decoder

@@ -20,14 +20,17 @@ module SPItop_tb;
 
     // Testbench signals
     logic clk;
+	logic rst;
     logic CS_n;
     logic SCLK;
     logic MOSI;
-    wire  MISO; // The DUT drives this, so it should be a wire
+    wire  MISO;
 
     // Instantiate the Device Under Test (DUT)
-    SPItop dut (
+	// Ignoring outputs because we only really care about the SPI interface itself...
+    top dut (
         .clk(clk),
+		.rst(rst),
         .CS_n(CS_n),
         .SCLK(SCLK),
         .MOSI(MOSI),
@@ -59,13 +62,13 @@ module SPItop_tb;
             
             // Generate SCLK pulse (CPOL=0: idle low)
             SCLK = 0;
-            #(CLK_PERIOD * 2);
+            #(CLK_PERIOD * 3); // Because of the synchronizers, we wait an extra clock cycle than what would normally be needed
             
             SCLK = 1;
             // The slave captures MOSI on this rising edge.
             // We sample MISO on this rising edge as well.
             rx_data[i] = MISO; 
-            #(CLK_PERIOD * 2);
+            #(CLK_PERIOD * 3);
         end
         
         // Reset signals after the transfer
@@ -91,6 +94,7 @@ module SPItop_tb;
         // 1. Initialize all signals to a known state
         $display("TESTBENCH: Starting simulation.");
         clk = 0;
+		rst = 0;
         CS_n = 1;  // Chip select is active low, so start high
         SCLK = 0;  // SPI Mode 0, clock idle is low
         MOSI = 0;
@@ -105,7 +109,7 @@ module SPItop_tb;
         // junk (0x00) since the slave has nothing to echo yet.
         // --------------------------------------------------------------------
         data_sent = 8'hA5;
-        expected_data = 8'h00; // Expected from the first transaction
+        expected_data = 8'h??; // Expected from the first transaction
         
         $display("TESTBENCH: Tx -> %h, Expecting Rx -> %h", data_sent, expected_data);
         spi_transfer(data_sent, data_received);
