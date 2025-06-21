@@ -42,11 +42,12 @@ module FIFO #(
 
 		if (writeEn) begin // user's responsibility to not write when full
 			writePtr <= writePtr + 1;
-			mem[writePtr] <= writeData;
+			mem[writePtr[$clog2(DEPTH) - 1:0]] <= writeData;
 		end
+		
 		if (readEn) begin
 			readPtr <= readPtr + 1;
-			readDataReg <= mem[readPtr];
+			readDataReg <= mem[readPtr[$clog2(DEPTH) - 1:0]];
 		end
 		end
 	end
