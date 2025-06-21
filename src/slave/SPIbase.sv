@@ -5,7 +5,7 @@
 */
 
 
-module SPItop #(
+module SPInoFIFO #(
 	parameter WIDTH = 8
 	)(
 	input clk,
@@ -17,7 +17,7 @@ module SPItop #(
 	output [WIDTH - 1:0] data,
 	output full,
 	input [WIDTH - 1:0] dataIn,
-	input send
+	input writeEn
     );
     
     logic [WIDTH - 1:0] shiftIn;
@@ -34,14 +34,14 @@ module SPItop #(
     
     always @ (posedge clk) begin
 
-		if (rst_n) begin
+		if (~rst_n) begin
 			shiftIn <= {WIDTH{1'b0}};
 			shiftOut <= {WIDTH{1'b0}};
 			bitCount <= {$clog2(WIDTH){1'b0}};
 			prevSCLK <= 0;
 		end else begin
 
-		if (send) begin
+		if (writeEn) begin
 			shiftOut <= dataIn;
 		end
 

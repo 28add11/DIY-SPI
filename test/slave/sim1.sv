@@ -26,6 +26,9 @@ module SPItop_tb;
     logic MOSI;
     wire  MISO;
 
+	// Control signals
+	logic [1:0] sw;
+
     // Instantiate the Device Under Test (DUT)
 	// Ignoring outputs because we only really care about the SPI interface itself...
     top dut (
@@ -34,7 +37,8 @@ module SPItop_tb;
         .CS_n(CS_n),
         .SCLK(SCLK),
         .MOSI(MOSI),
-        .MISO(MISO)
+        .MISO(MISO),
+        .sw(sw)
     );
 
     // System Clock Generation (100 MHz)
@@ -79,7 +83,7 @@ module SPItop_tb;
         CS_n = 1;
         
         // Wait for a period between transactions
-        #(CLK_PERIOD * 4);
+        #(CLK_PERIOD * 5);
     endtask
 
 
@@ -94,15 +98,23 @@ module SPItop_tb;
         // 1. Initialize all signals to a known state
         $display("TESTBENCH: Starting simulation.");
         clk = 0;
-		rst = 0;
         CS_n = 1;  // Chip select is active low, so start high
         SCLK = 0;  // SPI Mode 0, clock idle is low
         MOSI = 0;
-        
-        // Wait for a few clock cycles for stability
-        #(CLK_PERIOD * 5);
+		sw = 2'b00;
+		
 
-        
+		for (int i = 0; i < 2; i++) begin // Go once for no fifo, then again for fifo
+		
+		sw[0] = i; // Set switch to select FIFO or no FIFO
+		$display("TESTBENCH: Running test with sw[0] = %b", sw[0]);
+
+		rst = 1; // Reset after switches to ensure FIFOs aren't full of garbage
+		#(CLK_PERIOD * 5);
+		rst = 0;
+
+		// Wait for a few clock cycles for stability
+        #(CLK_PERIOD * 5);
 
         // --------------------------------------------------------------------
         // Transaction 1: Send the first byte (0xA5). We expect to receive
@@ -179,6 +191,8 @@ module SPItop_tb;
             $error("TESTBENCH: FAIL! Received %h, but expected %h.", data_received, expected_data);
         end
         
+		end // End of double test loop
+
         // End simulation
         $display("TESTBENCH: All tests completed.");
         $finish;
