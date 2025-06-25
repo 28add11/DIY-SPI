@@ -1,12 +1,14 @@
 `timescale 1ns / 1ps
 
-module sync (
+module sync #(
+		parameter WIDTH = 1
+	)(
 		input clk,
-		input in,
-		output out
+		input [WIDTH - 1:0] in,
+		output [WIDTH - 1:0] out
 	);
 
-	logic inSync1, inSync2;
+	logic [WIDTH - 1:0] inSync1, inSync2;
 	assign out = inSync2;
 	
 	always @(posedge clk) begin

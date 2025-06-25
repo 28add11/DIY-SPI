@@ -91,12 +91,12 @@ module FIFO_tb;
 
 		for (int i = 0; i < 8; i++) begin
 			readEn = 1;
+			#CLK_PERIOD;
 			if (dataOut == testMem[i]) begin
 				$display("TESTBENCH: PASS! Received %h as expected.", dataOut);
 			end else begin
 				$error("TESTBENCH: FAIL! Received %h, but expected %h.", dataOut, testMem[i]);
-			end
-			#CLK_PERIOD;
+			end	
 		end
 		readEn = 0;
 

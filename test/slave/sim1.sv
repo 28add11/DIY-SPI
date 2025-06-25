@@ -31,7 +31,7 @@ module SPItop_tb;
 
     // Instantiate the Device Under Test (DUT)
 	// Ignoring outputs because we only really care about the SPI interface itself...
-    top dut (
+    slaveTop dut (
         .clk(clk),
 		.rst(rst),
         .CS_n(CS_n),

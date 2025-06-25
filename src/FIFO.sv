@@ -37,7 +37,7 @@ module FIFO #(
 		if (~rst_n) begin
 			readPtr <= 0;
 			writePtr <= 0;
-			readDataReg <= {WIDTH{1'b0}};
+			readDataReg <= 0;
 		end else begin
 
 		if (writeEn) begin // user's responsibility to not write when full
