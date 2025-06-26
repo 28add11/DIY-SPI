@@ -46,7 +46,6 @@ table lists input/output descriptions:
 |`startTransaction`          | When pulsed (or held, as long as transmit FIFO has data) will begin an SPI transaction|
 |`doneTransaction`           | Will go low when busy (transmitting)|
 |`prescale1`, `prescale2`    | 8 bit wide buses, for the clock prescale value. Must be held at the desired value for the whole transaction, but can be changed on the fly.|
-|----------------------------|------------------------------------------|
 
 ## SCK Generation
 
