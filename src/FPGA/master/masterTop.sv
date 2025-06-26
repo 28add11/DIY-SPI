@@ -69,7 +69,7 @@ module masterTop(
 		.clk(clk),
 		.rst_n(rst_n),
 		.CS_n(CS_n),
-		.SCLK(SCLK),
+		.SCK(SCLK),
 		.MOSI(MOSI),
 		.MISO(sMISO),
 		.RXdata(dataIn),
@@ -159,7 +159,7 @@ module masterTop(
 				if (dataIn != RXDataCheck) begin
 					dataGood <= 1'b0;
 				end else begin
-					dataGood <= 1'b1;
+					dataGood <= dataGood;
 				end
 				RXDataCheck <= RXDataCheck + 1;
 				RXDataCheckState <= RXIDLE;
