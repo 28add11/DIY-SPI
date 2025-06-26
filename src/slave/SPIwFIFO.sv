@@ -8,8 +8,7 @@
 module SPIwithFIFO #(
 	parameter WIDTH = 8,
 	parameter TxFIFODepth = 8,
-	parameter RxFIFODepth = 8,
-	parameter defaultTXdata = {WIDTH{1'b0}} // Default TX data to send when not writing
+	parameter RxFIFODepth = 8
 	)(
 	input clk,
 	input rst_n,
@@ -42,7 +41,7 @@ module SPIwithFIFO #(
     logic prevSCLK;
     
 	logic shiftInFull; // Data recive done signal
-    assign shiftInFull = rxBitCount == (1 << $clog2(WIDTH));
+    assign shiftInFull = rxBitCount == WIDTH;
 	logic shiftOutEmpty; // Data send done signal
 	assign shiftOutEmpty = txBitCount == 0;
 
@@ -83,9 +82,9 @@ module SPIwithFIFO #(
 
 		if (~rst_n) begin
 			shiftIn <= 0;
-			shiftOut <= defaultTXdata;
+			shiftOut <= 0;
 			rxBitCount <= 0;
-			txBitCount <= (1 << $clog2(WIDTH));
+			txBitCount <= WIDTH;
 			prevSCLK <= 0;
 			writeRXFIFO <= 1'b0;
 			readTXFIFO <= 1'b0;
@@ -97,7 +96,7 @@ module SPIwithFIFO #(
 			IDLE: begin
 				if (shiftOutEmpty && ~TXFIFOempty && ~CS_nFallingEdge) begin // CS_n check is to avoid double driving, even though it should never really happen
 					readTXFIFO <= 1'b1;
-					txBitCount <= (1 << $clog2(WIDTH));
+					txBitCount <= WIDTH;
 					TXFIFOReadState <= WAIT_FOR_DATA;
 				end else readTXFIFO <= 1'b0;
 			end
@@ -122,7 +121,7 @@ module SPIwithFIFO #(
     	if (CS_nFallingEdge) begin // Chip becomes selected
     		prevSCLK <= 0;
     		rxBitCount <= 0;
-			txBitCount <= (1 << $clog2(WIDTH));
+			txBitCount <= WIDTH;
 
 		end else begin
     		prevSCLK <= SCLK;

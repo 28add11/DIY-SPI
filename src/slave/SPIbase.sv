@@ -30,14 +30,14 @@ module SPInoFIFO #(
 	// Does have issue of first transaction being full, but this is meant to be a base that ISNT actually used
     logic prevSCLK;
     
-    assign full = bitCount == {$clog2(WIDTH){1'b0}};
+    assign full = bitCount == 0;
     
     always @ (posedge clk) begin
 
 		if (~rst_n) begin
 			shiftIn <= {WIDTH{1'b0}};
 			shiftOut <= {WIDTH{1'b0}};
-			bitCount <= {$clog2(WIDTH){1'b0}};
+			bitCount <= 0;
 			prevSCLK <= 0;
 		end else begin
 
@@ -47,7 +47,7 @@ module SPInoFIFO #(
 
     	if (CS_n) begin // Chip is not selected
     		prevSCLK <= 0;
-    		bitCount <= {$clog2(WIDTH){1'b0}};
+    		bitCount <= 0;
     	end else begin
     	
     		prevSCLK <= SCLK;

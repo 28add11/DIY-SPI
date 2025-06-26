@@ -10,25 +10,25 @@ module clkPrescale (
 		input prescaleEn,
 		input [7:0] prescale1,
 		input [7:0] prescale2,
-		output SCLKTick
+		output SCKTick
 	);
 
 	logic [7:0] count1, count2;
-	logic SCLKTickReg;
+	logic SCKTickReg;
 
-	assign SCLKTick = SCLKTickReg;
+	assign SCKTick = SCKTickReg;
 
 	always @(posedge clk) begin
 		if (~rst_n) begin
 			count1 <= 0;
 			count2 <= 0;
-			SCLKTickReg <= 0;
+			SCKTickReg <= 0;
 		end else begin
 		
 		if (~prescaleEn) begin
 			count1 <= 0;
 			count2 <= 0;
-			SCLKTickReg <= 0;
+			SCKTickReg <= 0;
 		end else begin
 
 			if (count1 == prescale1) begin // 512 counts for 1 clock cycle
@@ -36,14 +36,14 @@ module clkPrescale (
 
 				if (count2 == prescale2) begin
 					count2 <= 0;
-					SCLKTickReg <= 1;
+					SCKTickReg <= 1;
 				end else begin
-					SCLKTickReg <= 0;
+					SCKTickReg <= 0;
 					count2 <= count2 + 1;
 				end
 
 			end else begin
-				SCLKTickReg <= 0;
+				SCKTickReg <= 0;
 				count1 <= count1 + 1;
 			end
 

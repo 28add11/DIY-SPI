@@ -13,7 +13,7 @@ module SPIMaster #(
 	input clk,
 	input rst_n,
     output CS_n,
-    output SCLK,
+    output SCK,
     output MOSI,
     input MISO,
 	output [WIDTH - 1:0] RXdata,
@@ -33,11 +33,11 @@ module SPIMaster #(
 	logic [WIDTH - 1:0] shiftIn;
 	logic [WIDTH - 1:0] shiftOut;
 	logic chipSelect;
-	logic SCLKReg;
+	logic SCKReg;
     
 	assign MOSI = shiftOut[WIDTH - 1];
 	assign CS_n = chipSelect;
-	assign SCLK = SCLKReg;
+	assign SCK = SCKReg;
     
 	logic [$clog2(WIDTH):0] bitCount; // Use extra top bit as a flag for if we've commited the value to the FIFO
 
@@ -50,7 +50,7 @@ module SPIMaster #(
 	logic [2:0] transactionState;
 
 	logic transactionDone;
-	assign transactionDone = bitCount == (1 << $clog2(WIDTH));
+	assign transactionDone = bitCount == WIDTH;
 
 	logic doneTransactionReg;
 	assign doneTransaction = doneTransactionReg;
@@ -82,16 +82,16 @@ module SPIMaster #(
 		.empty(TXFIFOempty)
 	);
 
-	logic SCLKTick;
-	logic enSCLK;
+	logic SCKTick;
+	logic enSCK;
 
 	clkPrescale prescaler (
 		.clk(clk),
 		.rst_n(rst_n),
-		.prescaleEn(enSCLK),
+		.prescaleEn(enSCK),
 		.prescale1(prescale1),
 		.prescale2(prescale2),
-		.SCLKTick(SCLKTick)
+		.SCKTick(SCKTick)
 	);
     
     always @ (posedge clk) begin
@@ -100,8 +100,8 @@ module SPIMaster #(
 			shiftIn <= 0;
 			shiftOut <= 0;
 			chipSelect <= 1'b1;
-			SCLKReg <= 1'b0;
-			enSCLK <= 1'b0;
+			SCKReg <= 1'b0;
+			enSCK <= 1'b0;
 			bitCount <= 0;
 			writeRXFIFO <= 1'b0;
 			readTXFIFO <= 1'b0;
@@ -126,13 +126,13 @@ module SPIMaster #(
 			LOAD_FIFO_DATA: begin
 				shiftOut <= TXFIFOdata;
 				transactionState <= SEND_DATA;
-				enSCLK <= 1'b1;
+				enSCK <= 1'b1;
 			end
 			SEND_DATA: begin
 				if (~transactionDone) begin
-					if (SCLKTick) begin
-						SCLKReg <= ~SCLKReg;
-						if (SCLKReg) begin // Falling edge
+					if (SCKTick) begin
+						SCKReg <= ~SCKReg;
+						if (SCKReg) begin // Falling edge
 							shiftOut <= {shiftOut[WIDTH - 2:0], 1'b0};
 						end else begin // Rising edge
 							shiftIn <= {shiftIn[WIDTH - 2:0], MISO};
@@ -147,10 +147,10 @@ module SPIMaster #(
 			end
 			END_TRANSACTION: begin
 				writeRXFIFO <= 1'b0;
-				if (SCLKTick) begin // Falling edge
+				if (SCKTick) begin // Falling edge
 					chipSelect <= 1'b1;
-					enSCLK <= 1'b0;
-					SCLKReg <= 1'b0; // Reset SCLK
+					enSCK <= 1'b0;
+					SCKReg <= 1'b0; // Reset SCK
 					shiftOut <= 0;
 					bitCount <= 0;
 					doneTransactionReg <= 1;

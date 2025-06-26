@@ -65,7 +65,7 @@ module masterTop(
 
 	assign writeTXFIFO = writeTXFIFOReg && ~TXFIFOfull;
 
-	SPIMaster SPI (
+	SPIMaster #(.WIDTH(8)) SPI (
 		.clk(clk),
 		.rst_n(rst_n),
 		.CS_n(CS_n),

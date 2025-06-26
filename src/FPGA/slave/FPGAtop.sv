@@ -96,7 +96,7 @@ module slaveTop(
 		.writeEn(send)
 	);
 
-	SPIwithFIFO fifoSPI (
+	SPIwithFIFO #(.WIDTH(8)) fifoSPI ( // Test with werid num of bits
 		.clk(clk),
 		.rst_n(rst_n),
 		.CS_n(sCS_n),
@@ -149,7 +149,7 @@ module slaveTop(
 	// 7-segment display decoder
 	sevSeg display (
 		.clk(clk),
-		.num(dataIn),
+		.num({1'b0, dataIn}),
 		.seg(seg),
 		.dp(dp),
 		.an(an)

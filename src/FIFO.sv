@@ -1,8 +1,7 @@
 `timescale 1ns / 1ps
 /*
 // FIFO for SPI slave module.
-// Uses BRAM inference for Xilinx 7-series FPGAs.
-// If there is a more flexible definition of BRAM, let me know and I will implement it.
+// Synthesized to LUTRAM for Xilinx 7-series FPGAs, but this is what you'd want to replace with a memory macro if possible.
 */
 
 module FIFO #(
