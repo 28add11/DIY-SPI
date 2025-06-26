@@ -1,7 +1,7 @@
 # DIY-SPI
 ## A working, customizable SPI module, made by a hobbyist with minor brain damage
 
-This is an SPI mode 0 slave module, for communication in ASICs/FPGAs I will make. In the future, I hope to add more modes and a master version, as part of an SoC I will hopefully make one day. 
+This is an SPI mode 0 implementation, for communication in ASICs/FPGAs. There is both a master and slave version, both of which have versions with buffers for reciving and transmitting data. It's tested to work on the Basys 3, communicating with the RP2040.
 
 ## Documentation and how to use
 Because there will eventually (hopefully) be multiple different modules with differences between them, documentation of the inner workings and how to use them will be provided in their respective folders.
