@@ -31,44 +31,22 @@ by default), and `TxFIFODepth`/`RxFIFODepth` determine how deep each
 respective FIFO should be (8 WIDTH wide words by default). The following
 table lists input/output descriptions:
 
-  -----------------------------------------------------------------------
-  **Port**                          **Description**
-  --------------------------------- -------------------------------------
-  `clk`                           System clock
-
-  `rst_n`                         Active high synchronous reset
-
-  `CS_n`, `SCK`, `MOSI`       SPI outputs
-
-  `MISO`                          SPI input, synchronization is
-                                    implementer's responsibility
-
-  `RXdata`                        `WIDTH` wide bus, outputs data from
-                                    receive FIFO
-
-  `readEn`                        Read from receive FIFO
-
-  `RXFIFOempty`, `RXFIFOfull`,  FIFO flags
-  `TXFIFOempty`, `TXFIFOfull`   
-
-  `TXdata`                        `WIDTH` wide bus, input data to
-                                    transmit FIFO
-
-  `writeEn`                       Write to transmit FIFO. Data must be
-                                    held for at least 1 clock cycle.
-
-  `startTransaction`              When pulsed (or held, as long as
-                                    transmit FIFO has data) will begin an
-                                    SPI transaction
-
-  `doneTransaction`               Will go low when busy (transmitting)
-
-  `prescale1`, `prescale2`      8 bit wide buses, for the clock
-                                    prescale value. Must be held at the
-                                    desired value for the whole
-                                    transaction, but can be changed on
-                                    the fly.
-  -----------------------------------------------------------------------
+  
+|**Port**                    |      **Description**
+|----------------------------|-----------------------------------------|
+|`clk`                       | System clock|
+|`rst_n`                     | Active high synchronous reset|
+|`CS_n`, `SCK`, `MOSI`       | SPI outputs|
+|`MISO`                      | SPI input, synchronization is implementer's responsibility|
+|`RXdata`                    | `WIDTH` wide bus, outputs data from receive FIFO|
+|`readEn`                    | Read from receive FIFO|
+|`RXFIFOempty`, `RXFIFOfull`, `TXFIFOempty`, `TXFIFOfull`| FIFO flags|
+|`TXdata`                    | `WIDTH` wide bus, input data to transmit FIFO|
+|`writeEn`                   | Write to transmit FIFO. Data must be held for at least 1 clock cycle.|
+|`startTransaction`          | When pulsed (or held, as long as transmit FIFO has data) will begin an SPI transaction|
+|`doneTransaction`           | Will go low when busy (transmitting)|
+|`prescale1`, `prescale2`    | 8 bit wide buses, for the clock prescale value. Must be held at the desired value for the whole transaction, but can be changed on the fly.|
+|----------------------------|------------------------------------------|
 
 ## SCK Generation
 
