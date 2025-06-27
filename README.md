@@ -15,7 +15,7 @@ The modules themselves can be found in [src](src/), which is further split up in
 
 ## How to test
 If you want to test in hardware, feel free to use the code in [FPGA](src/FPGA/). The `slaveTop.sv` and `masterTop.sv` files are the top level definitions, you can change the input/output names to match how you want to implement it. I did so on a Basys 3, so functionality is tailored to that. 
-If you want to test using a simulator, the test code is in [test](test/). It's been tested in Vivado's built in simulator, and uses the FPGA test modules for the designs under test. 
+If you want to test using a simulator, the test code is in [test](test/). It's been tested in Vivado's built in simulator, and uses the FPGA test modules for the designs under test. There are more instructions for both in the [readme for FPGA](src/FPGA/README.md).
 
 
 Look, you probably shouldn't use this in your own project, I am definitly a noob to digital design. But if you want to learn off it, that is more than welcome. Even better, if you want to contribute I would be very glad.
